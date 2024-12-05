@@ -2,7 +2,7 @@ import * as React from "react";
 import projects from "./projects"; // Adjust the path if necessary
 
 
-export default function MyProjects() {
+export default function SharedWithMeProjects() {
   // Example project data
   
   return (
@@ -11,7 +11,7 @@ export default function MyProjects() {
         id="projects-heading"
         className="mt-9 text-base font-bold text-white max-md:mt-10"
       >
-        My Projects
+        Shared With Me 
       </h2>
       <div className="grid grid-cols-1 gap-9 mt-7 sm:grid-cols-3 lg:grid-cols-5 max-h-[80vh]  overflow-y-auto	scrollbar-hide">
         {projects.map((project) => (
