@@ -1,5 +1,5 @@
 import * as React from "react";
-import projects from "./projects"; // Adjust the path if necessary
+import projects from "../../../services/SharedWithMeProjects"; // Adjust the path if necessary
 
 
 export default function SharedWithMeProjects() {

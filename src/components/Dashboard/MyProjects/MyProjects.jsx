@@ -1,5 +1,5 @@
 import * as React from "react";
-import projects from "./projects"; // Adjust the path if necessary
+import projects from "../../../services/MyProjects"; // Adjust path if necessary
 
 
 export default function MyProjects() {
@@ -17,7 +17,7 @@ export default function MyProjects() {
         {projects.map((project) => (
           <button
             key={project.id}
-            className="flex flex-col px-px pt-px pb-5  rounded-xl border-2 border-solid bg-zinc-900 bg-opacity-100 border-zinc-700 w-[280px] hover:bg-opacity-50 focus:ring-2 focus:ring-blue-500"
+            className="flex flex-col px-px pt-px pb-5  rounded-xl border-2 border-solid bg-zinc-900 bg-opacity-100 border-zinc-700 w-[280px] hover:bg-opacity-50 focus:ring-2 focus:border-blue-500"
             role="menuitem"
             onClick={() => alert(`Selected Project: ${project.title}`)}
           >

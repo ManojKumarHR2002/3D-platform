@@ -7,10 +7,11 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   const handleNavigation = () => {
-    navigate("/signup");
+    navigate("/auth/login");
   };
 
   const [formData, setFormData] = React.useState({
+    name:"",
     email: "",
     password: ""
   });
@@ -25,7 +26,6 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate("/dashboard");
     // Handle form submission
   };
   const handleGoogleSignIn = () => {
@@ -34,14 +34,28 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-start pt-16 my-auto">
-      <h1 className="text-5xl font-bold text-white max-md:text-4xl">
-        Welcome Back!
+      <h1 className="text-5xl font-bold text-white max-md:text-4xl pr-32">
+        Welcome!
       </h1>
       
       <div className="flex gap-1.5 mt-3 text-base">
-        <div className="grow text-white">New here?</div>
-        <button className="font-semibold text-violet-400" tabIndex={0} onClick={handleNavigation}>Sign Up here</button>
+        <div className="grow text-white">Already have an account?</div>
+        <button 
+          className="font-semibold text-violet-400" 
+          tabIndex={0}
+          onClick={handleNavigation}
+        >
+            Log in here
+        </button>
       </div>
+      <FormInput
+        label="Name"
+        type="name"
+        id="name"
+        value={formData.name}
+        onChange={handleChange}
+        required
+      />
 
       <FormInput
         label="Email"
@@ -59,18 +73,13 @@ export default function LoginForm() {
         onChange={handleChange}
         required
       />
-      <a 
-          href="#forgot" 
-          className="flex pt-3 self-end text-sm font-medium text-white hover:text-violet-400 transition-colors"
-        >
-          Forgot password?
-        </a>
+      
         <div className="flex flex-col pt-7 self-center items-center mt-3 max-w-full text-sm text-white w-[300px]">
           <button 
             type="submit"
             className="px-6 py-3 mt-4 text-sm font-bold text-center text-white bg-violet-400 rounded-2xl shadow-[0px_2px_4px_rgba(0,0,0,0.12)] max-md:px-5"
           >
-            Log In
+            Log Up
           </button>
 
           <div className="flex py-5 items-center gap-5 mt-4 w-full">
@@ -89,7 +98,7 @@ export default function LoginForm() {
               alt="Google logo"
               className="object-contain rounded-full w-[19px]"
             />
-            <span className="flex-grow text-center">Sign in with Google</span>
+            <span className="flex-grow text-center">Sign up with Google</span>
           </button>
         </div>
 

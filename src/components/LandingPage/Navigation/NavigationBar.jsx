@@ -8,8 +8,8 @@ export function NavigationBar() {
 
   const navItems = [
     { label: "Asset Store", variant: "outline", className: "px-4 max-md:px-5", path: "/" },
-    { label: "Log In", variant: "outline", className: "px-8 max-md:px-5", path: "/login" },
-    { label: "Get Started", variant: "outline", className: "px-4 max-md:px-5", path: "/signup" }
+    { label: "Log In", variant: "outline", className: "px-8 max-md:px-5", path: "/auth/login" },
+    { label: "Get Started", variant: "outline", className: "px-4 max-md:px-5", path: "/auth/signup" }
   ];
 
   const handleButtonClick = (path) => {

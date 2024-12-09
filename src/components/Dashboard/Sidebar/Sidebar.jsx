@@ -2,21 +2,22 @@ import * as React from "react";
 import { useState } from "react";
 
 
-export default function Sidebar() {
+export default function Sidebar({setCurrentView}) {
   const [activeIndex, setActiveIndex] = useState(null);
 
   const sidebarItems = [
-    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/3611063559c036f4886cf5a7a620e63d8083ce53fcbe35e1b20962bd432ac294?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Home", isActive: true },
-    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/8bed5a864dcc9e2bb51b6267ea5e2ebe829e0578788652f5c22d6ef180df09b9?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "My Files" },
-    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/83a49c9f43583a48c534eeaf5b57a6377696cc277de878af10dea2416c1b5728?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Shared with me" },
-    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/e7d433a88393e0b32117b914db90112b365c729b5d3a1e38012557a4be51b307?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Asset store" },
+    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/3611063559c036f4886cf5a7a620e63d8083ce53fcbe35e1b20962bd432ac294?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Home", view: "Home"},
+    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/8bed5a864dcc9e2bb51b6267ea5e2ebe829e0578788652f5c22d6ef180df09b9?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "My Files", view: "MyProjects" },
+    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/83a49c9f43583a48c534eeaf5b57a6377696cc277de878af10dea2416c1b5728?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Shared with me",view: "SharedWithMe" },
+    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/e7d433a88393e0b32117b914db90112b365c729b5d3a1e38012557a4be51b307?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Asset store",view: "AssetStore" },
     // Separate items that should be at the bottom
-    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/d0b87d1799b0b6d551c5a23b8bf6528f642283e9a70f2fc313880808903d26e7?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Bin" },
-    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/d4c3666586709e77025bc797204906cd79a835916c6a304413fe7ee3409ac0db?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Help & feedback" }
+    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/d0b87d1799b0b6d551c5a23b8bf6528f642283e9a70f2fc313880808903d26e7?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Bin",view: "Bin" },
+    { icon: "https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/d4c3666586709e77025bc797204906cd79a835916c6a304413fe7ee3409ac0db?apiKey=aefa27f3a4d84b2fb61917384a45b85c&", text: "Help & feedback",view: "HelpAndFeedback" }
   ];
 
-  const handleClick = (index) => {
+  const handleClick = (item,index) => {
     setActiveIndex(index);
+    setCurrentView(item.view);
   };
 
   return (
@@ -59,7 +60,7 @@ export default function Sidebar() {
               key={index}
               className={`flex w-full gap-5 mt-4 max-md:ml-2.5 px-3 py-2 rounded-lg ${activeIndex === index ? 'bg-zinc-700' : 'bg-transparent'}`}
               role="menuitem"
-              onClick={() => handleClick(index)}
+              onClick={() => handleClick(item,index)}
               tabIndex={0}
             >
               <img
@@ -77,7 +78,7 @@ export default function Sidebar() {
                 key={index}
                 className={`flex w-full gap-5 mt-4 max-md:ml-2.5 px-3 py-2 rounded-lg ${activeIndex === index + 4 ? 'bg-zinc-700' : 'bg-transparent'}`}
                 role="menuitem"
-                onClick={() => handleClick(index + 4)}
+                onClick={() => handleClick(item,index + 4)}
                 tabIndex={0}
               >
                 <img

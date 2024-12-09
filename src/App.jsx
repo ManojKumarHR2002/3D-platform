@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage/Landing/LandingPage';
-import SignUpPage from './pages/SignUp/SignUpPage';
-import LogInPage from './pages/LogIn/LogInPage';
-import DashboardPage from './pages/Dashboard/DashboardPage/DashboardPage'
+import LandingPage from './pages/LandingPage/LandingPage';
+import AuthenticationPage from './pages/AuthenticationPage/AuthenticationPage';
+import DashboardPage from './pages/DashboardPage/DashboardPage'
 
 function App() {
   return (
@@ -14,8 +13,9 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         
         {/* Define the route for SignUp page */}
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/login" element={<LogInPage />} />
+        {/* <Route path="/signup" element={<AuthenticationPage />} /> */}
+        {/* <Route path="/login" element={<AuthenticationPage />} /> */}
+        <Route path="/auth/:authType" element={<AuthenticationPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
 
       </Routes>

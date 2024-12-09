@@ -1,7 +1,9 @@
 import React from 'react'
 
-export const AssetStore = () => {
+const AssetStore = () => {
   return (
     <div>AssetStore</div>
   )
 }
+
+export default AssetStore
