@@ -1,7 +1,9 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function TopActions() {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const navigate=useNavigate();
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -13,6 +15,7 @@ export default function TopActions() {
 
   const handleNewFile = () => {
     // New file functionality implementation
+    navigate("/canvas");
   };
 
   return (

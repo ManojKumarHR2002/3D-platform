@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage/LandingPage';
 import AuthenticationPage from './pages/AuthenticationPage/AuthenticationPage';
 import DashboardPage from './pages/DashboardPage/DashboardPage'
+import CanvasPage from './pages/CanvasPage/CanvasPage'
+
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
         {/* <Route path="/login" element={<AuthenticationPage />} /> */}
         <Route path="/auth/:authType" element={<AuthenticationPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/canvas" element={<CanvasPage />} />
 
       </Routes>
     </Router>
