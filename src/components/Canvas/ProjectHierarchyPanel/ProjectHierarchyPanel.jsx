@@ -31,30 +31,46 @@ export default function ProjectHierarchyPanel() {
         </button>
       </div>
       <div className="shrink-0 mt-3.5 h-px border border-solid border-neutral-700" />
-      <div className="flex gap-10 self-start mt-3.5 whitespace-nowrap max-md:ml-1">
+      <div className="flex self-start mt-3.5 whitespace-nowrap max-md:ml-1 w-[100%]">
         <button
-          className={`px-5 py-2.5 font-semibold rounded-xl ${
-            selectedTab === 'objects' ? 'bg-neutral-700' : 'bg-transparent'
-          } shadow-[0px_2px_4px_rgba(0,0,0,0.1)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50`}
+          className={`px-5 py-2.5 w-[50%] font-semibold rounded-xl ${
+            selectedTab === 'objects' ? 'bg-zinc-700' : 'bg-transparent'
+          } shadow-[0px_2px_4px_rgba(0,0,0,0.1)] `}
           onClick={() => setSelectedTab('objects')}
         >
           Objects
         </button>
         <button
-          className={`px-5 py-2.5 font-semibold rounded-xl ${
-            selectedTab === 'assets' ? 'bg-neutral-700' : 'bg-transparent'
-          } shadow-[0px_2px_4px_rgba(0,0,0,0.1)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50`}
+          className={`px-5 py-2.5 w-[50%] font-semibold rounded-xl ${
+            selectedTab === 'assets' ? 'bg-zinc-700' : 'bg-transparent'
+          } shadow-[0px_2px_4px_rgba(0,0,0,0.1)] `}
           onClick={() => setSelectedTab('assets')}
         >
           Assets
         </button>
       </div>
       <div className="shrink-0 mt-3.5 h-px border border-solid border-neutral-700" />
-      <div className="mt-3.5">
+      <div className="flex w-[100%] gap-3.5 px-2.5 py-2 mt-4 mr-2.5 text-xs text-center whitespace-nowrap rounded-md bg-zinc-700 shadow-[0px_2px_4px_rgba(0,0,0,0.12)] text-white text-opacity-80 max-md:ml-2.5">
+        <img
+          loading="lazy"
+          src="https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/6d7a49bbc989b0c5acece1414f616ac9bfadd5952630e38bc12b117ba190535a?apiKey=aefa27f3a4d84b2fb61917384a45b85c&"
+          className="object-contain shrink-0 self-start w-2.5 aspect-square"
+          alt="Search icon"
+        />
+        <input
+          type="search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="grow shrink w-[145px] bg-transparent border-none focus:outline-none"
+          placeholder="Search"
+          aria-label="Search canvas items"
+        />
+      </div>
+      <div className="flex-grow my-3.5">
         {selectedTab === 'objects' && <ObjectsCard />}
         {selectedTab === 'assets' && <AssetsCard />}
       </div>
-      <div className="absolute bottom-10">
+      <div >
         <div className="shrink-0 h-px border border-solid border-neutral-700 max-md:mt-10" />
         <nav className="flex flex-col gap-6" aria-label="Canvas navigation">
           <button className="flex gap-5 self-start mt-5 ml-5 max-md:ml-2.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg">

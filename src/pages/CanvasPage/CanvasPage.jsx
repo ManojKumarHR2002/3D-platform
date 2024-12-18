@@ -13,11 +13,12 @@ export default function CanvasPage() {
       </div>
 
       {/* Center Content with TopBar and CanvasArea */}
-      <div className="flex flex-col w-full items-center justify-center my-5">
+      <div className="flex flex-col gap-5 w-full items-center justify-center my-5 mx-5 ">
         <TopBar />
-        <div className="flex-grow">
-          <CanvasArea />
-        </div>
+        <CanvasArea />
+        {/* <div className="flex-grow">
+          
+        </div> */}
       </div>
 
       {/* Properties Panel */}
