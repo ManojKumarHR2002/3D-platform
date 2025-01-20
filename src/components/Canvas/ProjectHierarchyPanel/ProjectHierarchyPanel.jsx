@@ -72,9 +72,9 @@ export default function ProjectHierarchyPanel() {
       </div>
       <div >
         <div className="shrink-0 h-px border border-solid border-neutral-700 max-md:mt-10" />
-        <nav className="flex flex-col gap-6" aria-label="Canvas navigation">
-          <button className="flex gap-5 self-start mt-5 ml-5 max-md:ml-2.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg">
-            <img
+        <nav className="flex flex-col gap-3" aria-label="Canvas navigation">
+        <button className="flex w-[100%] gap-5 self-start mt-3 pl-5 py-2 max-md:ml-2.5 rounded-lg bg-transparent focus:bg-zinc-700">
+        <img
               loading="lazy"
               src="https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/1fa831e6b7eee84d8a4bda26e64ee90d59c6143c030f8acfda0266085c11350e?apiKey=aefa27f3a4d84b2fb61917384a45b85c&"
               className="object-contain shrink-0 self-start aspect-[1.07] w-[15px]"
@@ -82,7 +82,9 @@ export default function ProjectHierarchyPanel() {
             />
             <span>My Assets</span>
           </button>
-          <button className="flex gap-5 self-start ml-5 max-md:ml-2.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg">
+          <button className="flex w-[100%] gap-5 self-start pl-5 py-2 max-md:ml-2.5 rounded-lg bg-transparent focus:bg-zinc-700">
+          {/* <button className={`flex gap-5 self-start ml-5 max-md:ml-2.5 rounded-lg bg-zinc-700 focus:bg-transparent`}> */}
+
             <img
               loading="lazy"
               src="https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/27e5c33d3ec441cada5422455c24a8483dc87593c9290749f6427246aee7decc?apiKey=aefa27f3a4d84b2fb61917384a45b85c&"
@@ -91,7 +93,7 @@ export default function ProjectHierarchyPanel() {
             />
             <span>Import</span>
           </button>
-          <button className="flex gap-5 self-start ml-5 max-md:ml-2.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg">
+          <button className="flex w-[100%] gap-5 self-start pl-5 py-2 max-md:ml-2.5 rounded-lg bg-transparent focus:bg-zinc-700">
             <img
               loading="lazy"
               src="https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/ce1a1673260eaf1e4a4f81c2caacf861adfe83d92aa5f08414c0d5d172a3268a?apiKey=aefa27f3a4d84b2fb61917384a45b85c&"

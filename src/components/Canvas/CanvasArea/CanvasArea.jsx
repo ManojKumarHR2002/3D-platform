@@ -20,7 +20,7 @@ export default function CanvasArea() {
       aria-label="Canvas workspace"
       className="flex mx-5 rounded-lg aspect-square bg-neutral-600 h-[90%] w-[100%] " 
     >
-      <SplitPane initialSceneState={initialState} />
+      {/* <SplitPane initialSceneState={initialState} /> */}
     </div>
   );
 }
