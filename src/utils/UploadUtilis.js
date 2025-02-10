@@ -19,7 +19,11 @@ export const createFileUploader = (
     input.type = 'file';
     input.accept = '.gltf,.fbx,.glb'; // Accept only GLTF, GLB, or FBX files
 
+    console.log("Creating file input...");
+
+
     input.onchange = async (e) => {
+      
       const file = e.target.files?.[0];
       if (!file) return;
       const fileExtension = file.name.split('.').pop()?.toLowerCase(); // Get the file extension
@@ -67,5 +71,7 @@ export const createFileUploader = (
     };
 
     input.click(); // Trigger the file input click event to open the file picker
+    console.log("File input clicked!");
+
   };
 };

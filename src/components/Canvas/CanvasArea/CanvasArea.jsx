@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import * as THREE from "three";
-import Scene from "./CanvasComponents/Scene";
+import Scene from "@classes/Scene";
 import { loadGLTFModel, loadFBXModel, setupAnimations,setupAnimationLoop } from "@utils/ModelRenderUtils"; // Corrected path
 import { createFileUploader } from "@utils/uploadUtilis";
 
-export default function CanvasArea() {
-  const [uploading, setUploading] = useState(false); // Track upload state
-  const [uploadProgress, setUploadProgress] = useState(0); // Track upload progress
-  const [latestModel, setLatestModel] = useState(null); // Store the latest uploaded model
+export default function CanvasArea({ latestModel,error }) {
+
   const [sceneInstance, setSceneInstance] = useState(null); // Store the 3D scene instance
   const [mixers, setMixers] = useState([]); // Store animation mixers
-  const [error, setError] = useState(null); // Store error message
 
   // Initialize scene and animation loop
   useEffect(() => {
@@ -26,13 +23,6 @@ export default function CanvasArea() {
     setMixers(newMixers);
   }, []);
 
-  // Handle file upload
-  const handleUpload = createFileUploader(
-    setError,
-    setUploading,
-    setUploadProgress,
-    setLatestModel
-  );
 
   // Load model into scene based on file type
   const loadModelIntoScene = (model) => {
@@ -76,26 +66,7 @@ export default function CanvasArea() {
             </div>
           )}
 
-          {/* Upload button and progress bar */}
-          <div className="flex flex-col items-center gap-4">
-            <button
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 
-                ${uploading ? "bg-gray-600 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
-              onClick={handleUpload}
-              disabled={uploading}
-            >
-              {uploading ? `Uploading... ${uploadProgress}%` : "Upload 3D Model"}
-            </button>
 
-            {uploading && (
-              <div className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-500 transition-all duration-200"
-                  style={{ width: `${uploadProgress}%` }}
-                />
-              </div>
-            )}
-          </div>
 
           {/* Latest uploaded model */}
           {latestModel && (

@@ -27,43 +27,41 @@ export default class Scene {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
       this.fov,
-      window.innerWidth / window.innerHeight, // Will be updated dynamically later
+      window.innerWidth / window.innerHeight,
       this.nearPlane,
       this.farPlane
     );
     this.camera.position.z = 48;
 
-    // Specify the canvas
     const canvas = document.getElementById(this.canvasId);
     this.renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
     });
 
-    // Dynamically set the size based on the canvas container's size
-    const parent = canvas.parentElement;
-    const width = parent.offsetWidth;
-    const height = parent.offsetHeight;
-    this.renderer.setSize(width, height);
+    // Ensure parent element exists and get correct size
+    const parent = canvas?.parentElement;
+    if (parent) {
+      this.renderer.setSize(parent.offsetWidth, parent.offsetHeight);
+    } else {
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
 
-    document.body.appendChild(this.renderer.domElement);
+    // Remove document.body.appendChild(this.renderer.domElement);
 
-    // Initialize clock and controls
     this.clock = new THREE.Clock();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-    // Lighting
     this.ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-    this.ambientLight.castShadow = true;
     this.scene.add(this.ambientLight);
 
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 2);
     this.directionalLight.position.set(0, 32, 64);
     this.scene.add(this.directionalLight);
 
-    // Window resize handling
     window.addEventListener('resize', () => this.onWindowResize(), false);
   }
+
 
   animate() {
     window.requestAnimationFrame(this.animate.bind(this));
@@ -73,17 +71,25 @@ export default class Scene {
 
   render() {
     this.renderer.render(this.scene, this.camera);
+
   }
 
   onWindowResize() {
-    const canvas = this.renderer.domElement;
-    const parent = canvas.parentElement;
-    const width = parent.offsetWidth;
-    const height = parent.offsetHeight;
+     const canvas = this.renderer.domElement;
+  const parent = canvas.parentElement;
+  
+  if (!parent) return; // Prevent errors if parent is not found
 
-    // Update camera and renderer size based on the new container size
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
+  const width = parent.offsetWidth;
+  const height = parent.offsetHeight;
+
+  // ✅ Update camera aspect ratio properly
+  this.camera.aspect = width / height;
+  this.camera.updateProjectionMatrix();
+
+  // ✅ Resize renderer correctly
+  this.renderer.setSize(width, height);
+  this.renderer.setPixelRatio(window.devicePixelRatio); // Makes rendering crisp
+
   }
 }
