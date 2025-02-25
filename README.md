@@ -38,25 +38,23 @@ An interactive 3D platform built using **React Fiber** and **Three.js**. This pl
 
 5. Create a Custom Policy for Storage Access
 
-   1. To allow the anon role to SELECT, INSERT, UPDATE, and DELETE objects in the Supabase storage bucket:
-   
-   2. Go to Supabase Dashboard → Storage.
-   
-   3. Select your bucket.
-   
-   4. Navigate to the Policies tab.
-   
-      - Click New Policy and set the following values:
-   
-      - Policy Name: Allow anon full access
-   
-      - Role: anon
-   
-      - Permissions: SELECT, INSERT, UPDATE, DELETE
+1. To allow the anon role to SELECT, INSERT, UPDATE, and DELETE objects in the Supabase storage bucket:
+
+2. Go to Supabase Dashboard → Storage.
+
+3. Select your bucket.
+
+4. Navigate to the Policies tab.
+
+   - Click New Policy and set the following values:
+
+   - Policy Name: Allow anon full access
+
+   - Role: anon
+
+   - Permissions: SELECT, INSERT, UPDATE, DELETE
 
 5. Click Save Policy.
-
-
 
 5. Start the development server:
    ```bash
