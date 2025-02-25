@@ -24,9 +24,19 @@ An interactive 3D platform built using **React Fiber** and **Three.js**. This pl
    ```bash
     npm install
 
-4. Start the development server:
+4. Configure Supabase
+
+- **Set up a Supabase project.**
+- **Create a bucket in Supabase storage to store the 3D models.**
+- **Copy your Supabase URL, anonymous key, and bucket name, then add them to a .env file in the project root:**   
    ```bash
-    npm start
+   VITE_SUPABASE_URL=<your-supabase-url>
+   VITE_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+   VITE_SUPABASE_BUCKET_NAME=<your-supabase-bucket-name>
+
+5. Start the development server:
+   ```bash
+    npm run dev
 
 The application will be available at http://localhost:3000.
 
