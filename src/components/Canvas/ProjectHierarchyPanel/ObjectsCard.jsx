@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ObjectsCard() {
+export default function ObjectsCard({uploadedModels}) {
   return (
     <div className="p-4 bg-zinc-800 rounded-lg h-[100%]">
       <div className="flex gap-5 justify-between">
@@ -25,10 +25,20 @@ export default function ObjectsCard() {
           />
         </button>
       </div>
+
+      <div className="mt-3 text-white text-opacity-70 text-xs">
+        {uploadedModels.length > 0 ? (
+          uploadedModels.map((model, index) => (
+            <div key={index} className="mt-1">{model}</div>
+          ))
+        ) : (
+          <div className="text-gray-500 text-xs mt-2">No models uploaded</div>
+        )}
+      </div>
+
     </div>
   );
 }
-
 
 
 
