@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ObjectsCard from './ObjectsCard';
 import AssetsCard from './AssetsCard';
 
-export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadProgress }) {
+export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadProgress, uploadedModels  }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTab, setSelectedTab] = useState('objects'); // Default to 'objects'
   
@@ -67,8 +67,11 @@ export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadP
           aria-label="Search canvas items"
         />
       </div>
+
+      
+   
       <div className="flex-grow my-3.5">
-        {selectedTab === 'objects' && <ObjectsCard />}
+      {selectedTab === 'objects' && <ObjectsCard uploadedModels={uploadedModels}/>}
         {selectedTab === 'assets' && <AssetsCard />}
       </div>
       <div >
@@ -84,14 +87,12 @@ export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadP
             />
             <span>My Assets</span>
           </button>
+
           <button 
-          // onClick={(()=>console.log(typeof(handleUpload)))}
           onClick={() => { console.log("Test button clicked"); handleUpload(); }}          
           disabled={uploading}
           className="flex w-[100%] gap-5 self-start pl-5 py-2 max-md:ml-2.5 rounded-lg bg-transparent focus:bg-zinc-700"
           >
-          {/* <button className={`flex gap-5 self-start ml-5 max-md:ml-2.5 rounded-lg bg-zinc-700 focus:bg-transparent`}> */}
-
             <img
               loading="lazy"
               src="https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/27e5c33d3ec441cada5422455c24a8483dc87593c9290749f6427246aee7decc?apiKey=aefa27f3a4d84b2fb61917384a45b85c&"
@@ -99,13 +100,8 @@ export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadP
             />
               <span>{uploading ? `Uploading... ${uploadProgress}%` : "Import"}</span>
           </button>
-          {/* {uploading && (
-              <div className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-500 transition-all duration-200"
-                  style={{ width: `${uploadProgress}%` }}
-                />
-              </div>)} */}
+          
+
           <button className="flex w-[100%] gap-5 self-start pl-5 py-2 max-md:ml-2.5 rounded-lg bg-transparent focus:bg-zinc-700">
             <img
               loading="lazy"
