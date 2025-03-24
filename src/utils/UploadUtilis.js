@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@src/supabase/Supabase";
+import { uploadModelToDB } from "@src/utils/uploadModelToDB";
+
 
 /**
  * Handles file uploads to Supabase.
@@ -59,6 +61,10 @@ export const createFileUploader = (setError, setUploading, setUploadProgress, se
 
      // Update the latest model with the signed URL
      setLatestModel({ name: file.name, url: signedUrlData.signedUrl });
+    
+     // Save model details to Supabase database
+    await uploadModelToDB(file.name, signedUrlData.signedUrl);
+
    } catch (error) {
      setError(error.message); // Handle errors
    } finally {
