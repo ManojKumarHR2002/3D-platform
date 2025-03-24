@@ -1,0 +1,74 @@
+/* ProjectHierarchyPanel Styles */
+
+.hierarchy-tree {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.hierarchy-item {
+  display: flex;
+  align-items: center;
+  padding: 2px 0;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.hierarchy-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hierarchy-item-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.hierarchy-arrow {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  transition: transform 0.2s;
+}
+
+.hierarchy-arrow svg {
+  width: 10px;
+  height: 10px;
+  fill: rgba(255, 255, 255, 0.5);
+}
+
+.hierarchy-arrow.expanded {
+  transform: rotate(90deg);
+}
+
+.hierarchy-child-container {
+  margin-left: 12px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.hierarchy-item-placeholder {
+  width: 16px;
+  margin-right: 4px;
+}
+
+.drag-over {
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.drag-as-child {
+  border-left: 2px solid #4a9fff;
+}
+
+/* Indentation for nested items */
+.hierarchy-item[data-level="1"] { padding-left: 24px; }
+.hierarchy-item[data-level="2"] { padding-left: 40px; }
+.hierarchy-item[data-level="3"] { padding-left: 56px; }
+.hierarchy-item[data-level="4"] { padding-left: 72px; }
+.hierarchy-item[data-level="5"] { padding-left: 88px; } 
