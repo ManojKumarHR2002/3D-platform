@@ -1,11 +1,42 @@
 import React, { useState } from 'react';
 import ObjectsCard from './ObjectsCard';
 import AssetsCard from './AssetsCard';
+import './ProjectHierarchyPanel.css';
 
-export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadProgress, uploadedModels  }) {
+export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadProgress, uploadedModels, onModelsChange, onHighlight }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTab, setSelectedTab] = useState('objects'); // Default to 'objects'
+  const [selectedModel, setSelectedModel] = useState(null);
   
+
+  const handleHierarchyChange = (newModels) => {
+    if (onModelsChange) {
+      onModelsChange(newModels);
+    }
+  };
+
+  // Function to handle model highlighting
+  const handleHighlight = (modelName) => {
+    console.log('ProjectHierarchyPanel - handleHighlight called with:', modelName);
+    setSelectedModel(modelName);
+    if (onHighlight) {
+      console.log('ProjectHierarchyPanel - calling parent onHighlight');
+      onHighlight(modelName);
+    }
+  };
+
+  const handleModelRename = (oldName, newName) => {
+    console.log('Handling model rename:', oldName, '->', newName);
+    setSelectedModel(prev => {
+      const model = prev[oldName];
+      if (!model) return prev;
+      
+      const newModels = { ...prev };
+      delete newModels[oldName];
+      newModels[newName] = model;
+      return newModels;
+    });
+  };
 
   return (
     <div className="flex flex-col h-full px-2 py-6 text-sm rounded-xl bg-zinc-900 bg-opacity-80 text-white text-opacity-80">
@@ -71,7 +102,14 @@ export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadP
       
    
       <div className="flex-grow my-3.5">
-      {selectedTab === 'objects' && <ObjectsCard uploadedModels={uploadedModels}/>}
+        {selectedTab === 'objects' && (
+          <ObjectsCard 
+            uploadedModels={uploadedModels}
+            onHierarchyChange={handleHierarchyChange}
+            highlightModel={handleHighlight}
+            selectedModel={selectedModel}
+          />
+        )}
         {selectedTab === 'assets' && <AssetsCard />}
       </div>
       <div >
