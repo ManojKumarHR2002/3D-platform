@@ -1,46 +1,29 @@
 import React, { useState } from "react";
-import { supabase } from "@src/supabase/Supabase";
+import { renameModel } from "./renameModel";
+import HierarchyTree from "./HierarchyTree";
+import './ProjectHierarchyPanel.css';
 
-export default function ObjectsCard({ uploadedModels }) {
+export default function ObjectsCard({ uploadedModels, onHierarchyChange, highlightModel, selectedModel, canvasAreaRef }) {
   const [editingIndex, setEditingIndex] = useState(null);
   const [newName, setNewName] = useState("");
 
-  // Handle double-click to start renaming
-  const handleDoubleClick = (index, currentName) => {
-    setEditingIndex(index);
-    setNewName(currentName);
-  };
+  console.log('ObjectsCard - Received uploadedModels:', uploadedModels);
+  console.log('ObjectsCard - Selected model:', selectedModel);
 
-  // Handle input change
-  const handleChange = (e) => {
-    setNewName(e.target.value);
-  };
-
-  // Handle saving name change
-  const handleRename = async (index) => {
-    if (!newName.trim()) return;
+  const handleModelClick = (modelName, event) => {
+    console.log('Model clicked:', modelName);
+    console.log('Current selected model:', selectedModel);
     
-    const modelName = uploadedModels[index]; // Get the original model name
-
-    // Update in Supabase
-    const { error } = await supabase
-      .from("models")
-      .update({ name: newName })
-      .eq("name", modelName); // Match by model name
-
-    if (error) {
-      console.error("Error updating name:", error);
+    // If already selected, deselect it
+    if (selectedModel === modelName) {
+      console.log('Deselecting model:', modelName);
+      highlightModel(null);
     } else {
-      // Update locally
-      uploadedModels[index] = newName;
+      console.log('Selecting model:', modelName);
+      highlightModel(modelName);
     }
-
-    setEditingIndex(null);
-  };
-
-  // Handle Enter key or blur event to save
-  const handleKeyDown = (e, index) => {
-    if (e.key === "Enter") handleRename(index);
+    
+    event.stopPropagation(); // Prevent event from bubbling to canvas
   };
 
   return (
@@ -69,29 +52,14 @@ export default function ObjectsCard({ uploadedModels }) {
       </div>
 
       <div className="mt-3 text-white text-opacity-70 text-xs">
-        {uploadedModels.length > 0 ? (
-          uploadedModels.map((model, index) => (
-            <div key={index} className="mt-1">
-              {editingIndex === index ? (
-                <input
-                  type="text"
-                  className="bg-transparent border-b border-white outline-none text-white"
-                  value={newName}
-                  autoFocus
-                  onChange={handleChange}
-                  onBlur={() => handleRename(index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                />
-              ) : (
-                <span
-                  onDoubleClick={() => handleDoubleClick(index, model)}
-                  className="cursor-pointer"
-                >
-                  {model}
-                </span>
-              )}
-            </div>
-          ))
+        {Array.isArray(uploadedModels) && uploadedModels.length > 0 ? (
+          <HierarchyTree
+            uploadedModels={uploadedModels}
+            selectedModel={selectedModel}
+            onModelClick={handleModelClick}
+            onHierarchyChange={onHierarchyChange}
+            canvasAreaRef={canvasAreaRef}
+          />
         ) : (
           <div className="text-gray-500 text-xs mt-2">No models uploaded</div>
         )}
