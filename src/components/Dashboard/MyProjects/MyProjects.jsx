@@ -1,43 +1,61 @@
-import * as React from "react";
-import projects from "../../../services/MyProjects"; // Adjust path if necessary
 
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { getProjects, deleteProject } from "../../../services/MyProjects";
 
 export default function MyProjects() {
-  // Example project data
-  
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setProjects(getProjects());
+    setLoading(false);
+  }, []);
+
+  const handleDelete = (projectId) => {
+    deleteProject(projectId);
+    setProjects((prevProjects) => prevProjects.filter((p) => p.id !== projectId));
+  };
+
   return (
-    <section aria-labelledby="projects-heading" >
-      <h2
-        id="projects-heading"
-        className="mt-9 text-base font-bold text-white max-md:mt-10"
-      >
+    <section aria-labelledby="projects-heading">
+      <h2 id="projects-heading" className="mt-9 text-base font-bold text-white">
         My Projects
       </h2>
-      <div className="grid grid-cols-1 gap-9 mt-7 sm:grid-cols-3 lg:grid-cols-5 max-h-[80vh]  overflow-y-auto	scrollbar-hide">
-        {projects.map((project) => (
-          <button
-            key={project.id}
-            className="flex flex-col px-px pt-px pb-5  rounded-xl border-2 border-solid bg-zinc-900 bg-opacity-100 border-zinc-700 w-[280px] hover:bg-opacity-50 focus:ring-2 focus:border-blue-500"
-            role="menuitem"
-            onClick={() => alert(`Selected Project: ${project.title}`)}
-          >
-            <img
-              loading="lazy"
-              src={project.imgSrc}
-              alt={`${project.title} Project`}
-              className="object-contain w-full rounded-xl aspect-[1.7] shadow-[0px_2px_4px_rgba(0,0,0,0.12)]"
-            />
-            <div className="flex flex-col self-start mt-3 ml-3 max-md:ml-2.5">
-              <h3 className="self-start text-base font-semibold text-white text-opacity-80">
-                {project.title}
-              </h3>
-              <p className="text-sm text-white text-opacity-80">
-                {project.description}
-              </p>
+      {loading ? (
+        <p className="text-white mt-4">Loading projects...</p>
+      ) : projects.length === 0 ? (
+        <p className="text-white mt-4">No projects found.</p>
+      ) : (
+        <div className="grid grid-cols-1 gap-9 mt-7 sm:grid-cols-3 lg:grid-cols-5 max-h-[80vh] overflow-y-auto scrollbar-hide">
+          {projects.map((project) => (
+            <div key={project.id} className="relative">
+              <button
+                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full text-xs"
+                onClick={() => handleDelete(project.id)}
+              >
+                ✖
+              </button>
+              <button
+                className="flex flex-col px-2 py-3 rounded-xl border-2 border-solid bg-zinc-900 border-zinc-700 w-[280px] hover:bg-opacity-50 focus:ring-2 focus:border-blue-500"
+                role="menuitem"
+                onClick={() => alert(`Selected Project: ${project.title}`)}
+              >
+                <img
+                  loading="lazy"
+                  src={project.imgSrc}
+                  alt={`${project.title} Project`}
+                  className="object-contain w-full rounded-xl aspect-[1.7] shadow-lg"
+                />
+                <div className="flex flex-col self-start mt-3 ml-3">
+                  <h3 className="text-base font-semibold text-white">{project.title}</h3>
+                  <p className="text-sm text-gray-400">{project.description}</p>
+                </div>
+              </button>
             </div>
-          </button>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
