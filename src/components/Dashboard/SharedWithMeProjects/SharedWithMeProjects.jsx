@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import sharedProjectsService from "../../../services/SharedWithMeProjects"; // Adjust path if necessary
 
@@ -48,7 +47,9 @@ export default function SharedWithMeProjects() {
                 className="object-contain w-full rounded-xl aspect-[1.7] shadow-lg"
               />
               <div className="flex flex-col self-start mt-3 ml-3">
-                <h3 className="text-base font-semibold text-white">{project.title}</h3>
+                <h3 className="text-base font-semibold text-white">
+                  {project.title}
+                </h3>
                 <p className="text-sm text-gray-400">{project.description}</p>
               </div>
             </button>
