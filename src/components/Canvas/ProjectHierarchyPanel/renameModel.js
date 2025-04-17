@@ -27,10 +27,16 @@ export async function renameModel(index, newName, uploadedModels, setEditingInde
       onHierarchyChange([...uploadedModels]);
     }
 
-    // Update the model name in CanvasArea
+    // Update the model name in CanvasArea's loadedModels
     if (canvasAreaRef?.current?.handleModelRename) {
       canvasAreaRef.current.handleModelRename(oldName, newName);
     }
+
+    // If this was the selected model, update the selection
+    if (canvasAreaRef?.current?.updateSelectedModel) {
+      canvasAreaRef.current.updateSelectedModel(oldName, newName);
+    }
+
   } catch (error) {
     console.error("Error in rename operation:", error);
   } finally {
