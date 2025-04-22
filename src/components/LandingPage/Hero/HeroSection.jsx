@@ -7,15 +7,14 @@ export function HeroSection() {
         <div className="flex flex-col w-[66%] max-md:ml-0 max-md:w-full">
           <div className="flex flex-col self-stretch mx-5 my-auto text-center max-md:mt-10 max-md:max-w-full">
             <h1 className="text-4xl font-semibold text-white max-md:max-w-full">
-              Lorem ipsum dolor sit amet!
+              Welcome to Your Virtual World!
             </h1>
             <p className="mt-6 mr-3.5 ml-4 text-lg font-medium text-center text-white text-opacity-80 max-md:mr-2.5 max-md:max-w-full">
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat
+              Build, visualize, and control your own Digital Twins — all in your browser.
             </p>
-            {/* <button className="self-center p-2.5 mt-12 max-w-full text-sm font-bold text-center bg-violet-400 rounded-2xl shadow-[0px_2px_4px_rgba(0,0,0,0.12)] text-white text-opacity-90 w-[100px] max-md:mt-10">
-              Get Started
-            </button> */}
+            <button className="self-center p-2.5 mt-12 max-w-full text-sm font-bold text-center bg-blue-300 rounded-2xl shadow-[0px_2px_4px_rgba(0,0,0,0.12)] text-violet-900 text-opacity-90 w-[100px] max-md:mt-10">
+              Get Started 
+            </button>
           </div>
         </div>
         <div className="flex flex-col ml-5 w-[34%] max-md:ml-0 max-md:w-full">
