@@ -1,30 +1,25 @@
 import React from "react";
 
 export default function AssetsCard({ uploadedAssets, onSelectImage }) {
-  const handleDelete = (e, assetId) => {
-    e.stopPropagation();
-    // Add your delete logic here
+  const handleDragStart = (e, asset) => {
+    e.dataTransfer.setData('material', JSON.stringify(asset));
   };
 
-  const scrollbarHideStyle = {
-    msOverflowStyle: 'none',  // IE and Edge
-    scrollbarWidth: 'none',   // Firefox
-    '&::-webkit-scrollbar': { 
-      display: 'none'         // Chrome, Safari and Opera
-    }
+  const handleDelete = (e, assetId) => {
+    e.stopPropagation();
+    // Implement delete logic here
   };
 
   return (
-    <div 
-      className="p-4 bg-zinc-800 rounded-lg h-64 overflow-y-auto" 
-      style={scrollbarHideStyle}
-    >
+    <div className="p-4 bg-zinc-800 rounded-lg h-64 overflow-y-auto">
       {uploadedAssets && uploadedAssets.length > 0 ? (
         <div className="grid grid-cols-2 gap-4">
           {uploadedAssets.map((asset) => (
             <div 
               key={asset.id} 
               className="relative group cursor-pointer"
+              draggable
+              onDragStart={(e) => handleDragStart(e, asset)}
               onClick={() => onSelectImage(asset)}
             >
               <div className="relative aspect-square overflow-hidden rounded-lg">
@@ -49,7 +44,7 @@ export default function AssetsCard({ uploadedAssets, onSelectImage }) {
                   </button>
                 </div>
               </div>
-              <p className="mt-1 text-xs text-gray-300 truncate" title={asset.name}>
+              <p className="mt-1 text-xs text-gray-300 truncate">
                 {asset.name}
                 {asset.type === 'material' && (
                   <span className="block text-xs text-gray-400">Material</span>
