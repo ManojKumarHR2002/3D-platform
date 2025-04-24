@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function ObjectsCard({ onCreateObject }) {
+export default function ObjectsCard({ sceneObjects, onCreateObject }) {
   const [showPrimitives, setShowPrimitives] = useState(false);
   const primitives = ['Cube', 'Sphere', 'Cylinder', 'Cone', 'Plane', 'Torus'];
 
@@ -53,6 +53,17 @@ export default function ObjectsCard({ onCreateObject }) {
             ))}
           </div>
         )}
+      </div>
+
+      <div className="mt-4 space-y-2">
+        {sceneObjects.map(obj => (
+          <div 
+            key={obj.id}
+            className="p-2 bg-zinc-700 rounded cursor-pointer hover:bg-zinc-600"
+          >
+            {obj.type} #{obj.id.toString().slice(-4)}
+          </div>
+        ))}
       </div>
     </div>
   );
