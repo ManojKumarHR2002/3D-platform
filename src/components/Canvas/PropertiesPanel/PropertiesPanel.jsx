@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 export default function PropertiesPanel({ 
-  uploadedAssets, 
+  uploadedAssets,
   selectedMaterial,
   setSelectedMaterial,
   onAddNewMaterial,
-  onUpdateAsset
+  onUpdateAsset,
+  selectedObject,
+  sceneObjects,
+  updateSceneObjects
 }) {
   const [localAssets, setLocalAssets] = useState([]);
   const [mapSelectorType, setMapSelectorType] = useState(null);
@@ -17,9 +20,83 @@ export default function PropertiesPanel({
   }, [uploadedAssets]);
 
   const filteredTextures = uploadedAssets
-    .filter(a => a.type === 'image')
-    .filter(a => a.name.toLowerCase().includes(textureSearchTerm.toLowerCase()));
+    ?.filter(a => a.type === 'image')
+    ?.filter(a => a.name.toLowerCase().includes(textureSearchTerm.toLowerCase())) || [];
 
+  // Object Properties Management
+  const ObjectProperties = () => {
+    const obj = sceneObjects?.find(o => o.id === selectedObject);
+    
+    const updateProperty = (prop, value) => {
+      const updatedObjects = sceneObjects.map(o => 
+        o.id === selectedObject ? { ...o, [prop]: value } : o
+      );
+      updateSceneObjects(updatedObjects);
+    };
+
+    const handleDeleteObject = () => {
+      updateSceneObjects(prev => prev.filter(o => o.id !== selectedObject));
+      updateSceneObjects(prev => prev.filter(o => o.id !== selectedObject));
+    };
+
+    if (!obj) return null;
+
+    return (
+      <div className="mt-4 space-y-4">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-white text-sm">Object Properties</h3>
+          <button
+            onClick={handleDeleteObject}
+            className="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 rounded"
+          >
+            Delete Object
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {['position', 'rotation', 'scale'].map((prop) => (
+            <div key={prop} className="space-y-1">
+              <label className="text-xs text-gray-300 capitalize">{prop}</label>
+              <div className="flex gap-2">
+                {[0, 1, 2].map(i => (
+                  <input
+                    key={i}
+                    type="number"
+                    step={prop === 'rotation' ? 0.1 : 0.01}
+                    value={obj[prop][i]}
+                    onChange={(e) => {
+                      const newVal = [...obj[prop]];
+                      newVal[i] = parseFloat(e.target.value) || 0;
+                      updateProperty(prop, newVal);
+                    }}
+                    className="w-full px-2 py-1 text-xs bg-zinc-700 rounded"
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {obj.material && (
+          <div className="mt-4 pt-4 border-t border-zinc-700">
+            <h4 className="text-xs text-gray-400 mb-2">Applied Material</h4>
+            <div className="flex items-center gap-2">
+              <div 
+                className="w-6 h-6 rounded border border-gray-500"
+                style={{ backgroundColor: obj.material.baseColor || '#666666' }}
+              />
+              <div>
+                <p className="text-xs text-gray-300">{obj.material.name}</p>
+                <p className="text-xs text-gray-400">{obj.material.type}</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Material Properties Management (existing code)
   const handleSelect = (asset) => {
     if (asset.type === 'image') {
       const material = {
@@ -83,7 +160,7 @@ export default function PropertiesPanel({
       y: rect.bottom + window.scrollY
     });
     setMapSelectorType(type);
-    setTextureSearchTerm(''); // Reset search term when opening
+    setTextureSearchTerm('');
   };
 
   const assignMapImage = (img) => {
@@ -199,7 +276,9 @@ export default function PropertiesPanel({
           scrollbarWidth: 'none',
         }}
       >
-        {selectedMaterial && (
+        {selectedObject ? (
+          <ObjectProperties />
+        ) : selectedMaterial ? (
           <div className="mb-4 flex flex-col items-center justify-center">
             <p className="text-white text-sm mb-2">Selected {selectedMaterial.type === 'image' ? 'Texture' : 'Material'}</p>
             <div className="w-full rounded border border-gray-700 overflow-hidden">
@@ -260,6 +339,10 @@ export default function PropertiesPanel({
               </div>
             )}
           </div>
+        ) : (
+          <div className="text-center text-gray-400 py-10">
+            Select an object or material
+          </div>
         )}
 
         {mapSelectorType && (
@@ -284,7 +367,6 @@ export default function PropertiesPanel({
                   ×
                 </button>
               </div>
-              {/* Search Bar */}
               <div className="flex items-center gap-2 px-2 py-1 mb-2 bg-zinc-700 rounded">
                 <svg 
                   className="w-3 h-3 text-gray-400" 
@@ -340,14 +422,16 @@ export default function PropertiesPanel({
           </div>
         )}
 
-        <div className="mt-4">
-          <button
-            onClick={handleCreateEmptyMaterial}
-            className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-700 text-white hover:bg-zinc-600 transition-colors"
-          >
-            + Create New Material
-          </button>
-        </div>
+        {!selectedObject && (
+          <div className="mt-4">
+            <button
+              onClick={handleCreateEmptyMaterial}
+              className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-700 text-white hover:bg-zinc-600 transition-colors"
+            >
+              + Create New Material
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
