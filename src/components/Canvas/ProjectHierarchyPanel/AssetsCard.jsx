@@ -1,18 +1,13 @@
 import React from "react";
 
-export default function AssetsCard({ uploadedAssets, onSelectImage }) {
+export default function AssetsCard({ uploadedAssets, onSelectImage, onDeleteAsset }) {
   const handleDragStart = (e, asset) => {
     e.dataTransfer.setData('material', JSON.stringify(asset));
   };
 
-  const handleDelete = (e, assetId) => {
-    e.stopPropagation();
-    // Implement delete logic here
-  };
-
   return (
-    <div className="p-4 bg-zinc-800 rounded-lg h-64 overflow-y-auto">
-      {uploadedAssets && uploadedAssets.length > 0 ? (
+    <div className="p-4 bg-zinc-800 rounded-lg h-64 overflow-y-auto"> 
+      {uploadedAssets?.length > 0 ? (
         <div className="grid grid-cols-2 gap-4">
           {uploadedAssets.map((asset) => (
             <div 
@@ -37,7 +32,10 @@ export default function AssetsCard({ uploadedAssets, onSelectImage }) {
                 )}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <button 
-                    onClick={(e) => handleDelete(e, asset.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteAsset(asset.id);
+                    }}
                     className="text-white text-xs bg-red-500 hover:bg-red-600 rounded-full w-6 h-6 flex items-center justify-center"
                   >
                     ×
@@ -54,7 +52,7 @@ export default function AssetsCard({ uploadedAssets, onSelectImage }) {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-400">No assets to display.</p>
+        <p className="text-center text-gray-400 py-10">No assets to display</p>
       )}
     </div>
   );
