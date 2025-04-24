@@ -96,10 +96,16 @@ export default function CanvasWrapper() {
   };
 
   const handleCreateObject = (type) => {
+    const getRandomPosition = () => [
+      (Math.random() - 0.5) * 3,  // X between -1.5 to 1.5
+      (Math.random() - 0.5) * 3,  // Y between -1.5 to 1.5
+      (Math.random() - 0.5) * 3   // Z between -1.5 to 1.5
+    ];
+  
     const newObject = {
       id: Date.now(),
       type,
-      position: [0, 0, 0],
+      position: getRandomPosition(),
       rotation: [0, 0, 0],
       scale: [1, 1, 1],
       material: null
@@ -113,6 +119,13 @@ export default function CanvasWrapper() {
     ));
   };
 
+  const handleDeleteAsset = (assetId) => {
+    setUploadedAssets(prev => prev.filter(asset => asset.id !== assetId));
+    if (selectedMaterial?.id === assetId) {
+      setSelectedMaterial(null);
+    }
+  };
+
   return (
     <div className="flex w-screen h-screen bg-zinc-800">
       <div className="w-[15%] my-5 ml-5">
@@ -121,8 +134,10 @@ export default function CanvasWrapper() {
           uploading={uploading} 
           uploadProgress={uploadProgress}
           uploadedAssets={uploadedAssets}
+          sceneObjects={sceneObjects}
           onSelectImage={handleImageSelect}
           onCreateObject={handleCreateObject}
+          onDeleteAsset={handleDeleteAsset}
         />
       </div>
 
