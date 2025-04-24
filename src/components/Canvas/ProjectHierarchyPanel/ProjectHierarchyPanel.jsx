@@ -7,8 +7,10 @@ export default function ProjectHierarchyPanel({
   uploading, 
   uploadProgress, 
   uploadedAssets,
+  sceneObjects,
   onSelectImage,
-  onCreateObject
+  onCreateObject,
+  onDeleteAsset
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTab, setSelectedTab] = useState('objects');
@@ -81,11 +83,17 @@ export default function ProjectHierarchyPanel({
       </div>
 
       <div className="flex-grow my-3.5">
-        {selectedTab === 'objects' && <ObjectsCard onCreateObject={onCreateObject} />}
+        {selectedTab === 'objects' && (
+          <ObjectsCard 
+            sceneObjects={sceneObjects}
+            onCreateObject={onCreateObject}
+          />
+        )}
         {selectedTab === 'assets' && (
           <AssetsCard 
             uploadedAssets={uploadedAssets} 
             onSelectImage={onSelectImage}
+            onDeleteAsset={onDeleteAsset}
           />
         )}
       </div>
