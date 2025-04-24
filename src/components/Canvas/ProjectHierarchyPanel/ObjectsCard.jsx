@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function ObjectsCard() {
+export default function ObjectsCard({ onCreateObject }) {
+  const [showPrimitives, setShowPrimitives] = useState(false);
+  const primitives = ['Cube', 'Sphere', 'Cylinder', 'Cone', 'Plane', 'Torus'];
+
   return (
-    <div className="p-4 bg-zinc-800 rounded-lg h-[100%]">
+    <div className="p-4 bg-zinc-800 rounded-lg h-[100%] relative">
       <div className="flex gap-5 justify-between">
         <div className="flex gap-2">
           <div>Scene 1</div>
@@ -25,11 +28,35 @@ export default function ObjectsCard() {
           />
         </button>
       </div>
+
+      <div className="mt-4 space-y-2">
+        <button
+          onClick={() => setShowPrimitives(!showPrimitives)}
+          className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-700 hover:bg-zinc-600 transition-colors"
+        >
+          + Add 3D Object
+        </button>
+
+        {showPrimitives && (
+          <div className="absolute z-10 w-[90%] bg-zinc-700 rounded-lg shadow-lg p-2">
+            {primitives.map((primitive) => (
+              <button
+                key={primitive}
+                onClick={() => {
+                  onCreateObject(primitive.toLowerCase());
+                  setShowPrimitives(false);
+                }}
+                className="w-full px-3 py-2 text-left hover:bg-zinc-600 rounded"
+              >
+                {primitive}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-
-
 
 
 
