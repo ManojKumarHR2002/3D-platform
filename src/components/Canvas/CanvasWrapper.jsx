@@ -12,6 +12,8 @@ export default function CanvasWrapper() {
   const [error, setError] = useState(null);
   const [uploadedAssets, setUploadedAssets] = useState([]);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [sceneObjects, setSceneObjects] = useState([]);
+  const [selectedObject, setSelectedObject] = useState(null);
 
   const handleFileUpload = (e) => {
     const files = e.target.files;
@@ -20,6 +22,7 @@ export default function CanvasWrapper() {
     setUploading(true);
     setUploadProgress(0);
 
+    // Handle image uploads
     const imageFiles = Array.from(files).filter(file => 
       file.type.match('image.*')
     );
@@ -45,6 +48,7 @@ export default function CanvasWrapper() {
       });
     }
 
+    // Handle 3D model uploads
     const modelFiles = Array.from(files).filter(file => 
       file.name.match(/\.(gltf|glb|fbx)$/i)
     );
@@ -91,6 +95,24 @@ export default function CanvasWrapper() {
     setUploadedAssets(prev => [...prev, material]);
   };
 
+  const handleCreateObject = (type) => {
+    const newObject = {
+      id: Date.now(),
+      type,
+      position: [0, 0, 0],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+      material: null
+    };
+    setSceneObjects(prev => [...prev, newObject]);
+  };
+
+  const handleApplyMaterial = (objectId, material) => {
+    setSceneObjects(prev => prev.map(obj => 
+      obj.id === objectId ? {...obj, material} : obj
+    ));
+  };
+
   return (
     <div className="flex w-screen h-screen bg-zinc-800">
       <div className="w-[15%] my-5 ml-5">
@@ -100,12 +122,20 @@ export default function CanvasWrapper() {
           uploadProgress={uploadProgress}
           uploadedAssets={uploadedAssets}
           onSelectImage={handleImageSelect}
+          onCreateObject={handleCreateObject}
         />
       </div>
 
       <div className="flex flex-col gap-5 w-[70%] items-center justify-center my-5 mx-5">
         <TopBar />
-        <CanvasArea latestModel={latestModel} error={error} selectedMaterial={selectedMaterial} />
+        <CanvasArea 
+          latestModel={latestModel}
+          error={error}
+          sceneObjects={sceneObjects}
+          selectedObject={selectedObject}
+          onObjectSelect={setSelectedObject}
+          onApplyMaterial={handleApplyMaterial}
+        />
       </div>
 
       <div className="w-[15%] my-5 mr-5">
@@ -115,6 +145,9 @@ export default function CanvasWrapper() {
           setSelectedMaterial={setSelectedMaterial}
           onAddNewMaterial={handleAddNewMaterial}
           onUpdateAsset={handleUpdateAsset}
+          selectedObject={selectedObject}
+          sceneObjects={sceneObjects}
+          updateSceneObjects={setSceneObjects}
         />
       </div>
     </div>
