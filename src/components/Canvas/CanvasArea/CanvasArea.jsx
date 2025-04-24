@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import Scene from "@classes/Scene";
-import { loadGLTFModel, loadFBXModel, setupAnimations,setupAnimationLoop } from "@utils/ModelRenderUtils"; // Corrected path
-import { createFileUploader } from "@utils/uploadUtilis";
 
 export default function CanvasArea({ 
   sceneObjects = [],
