@@ -119,12 +119,21 @@ export default function CanvasWrapper() {
     ));
   };
 
-  const handleDeleteAsset = (assetId) => {
-    setUploadedAssets(prev => prev.filter(asset => asset.id !== assetId));
-    if (selectedMaterial?.id === assetId) {
-      setSelectedMaterial(null);
-    }
-  };
+const handleDeleteAsset = (assetId) => {
+  setUploadedAssets(prev => prev.filter(asset => asset.id !== assetId));
+  // Clear material from objects and reset their default properties
+  setSceneObjects(prev => prev.map(obj => 
+    obj.material?.id === assetId ? {
+      ...obj,
+      material: null,
+      // Reset any material-related properties to defaults
+      baseColor: '#666666' // Add this if your objects track baseColor separately
+    } : obj
+  ));
+  if (selectedMaterial?.id === assetId) {
+    setSelectedMaterial(null);
+  }
+};
 
   return (
     <div className="flex w-screen h-screen bg-zinc-800">
@@ -163,6 +172,7 @@ export default function CanvasWrapper() {
           selectedObject={selectedObject}
           sceneObjects={sceneObjects}
           updateSceneObjects={setSceneObjects}
+          onObjectDelete={() => setSelectedObject(null)}
         />
       </div>
     </div>
