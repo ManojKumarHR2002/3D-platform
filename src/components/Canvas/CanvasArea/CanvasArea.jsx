@@ -12,7 +12,7 @@ export default function CanvasArea({
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
-  // Scene initialization with error handling
+  // Scene initialization and cleanup
   useEffect(() => {
     try {
       sceneInstance.current = new Scene("myThreeJsCanvas");
@@ -20,30 +20,50 @@ export default function CanvasArea({
       sceneInstance.current.animate();
     } catch (error) {
       console.error("Scene initialization failed:", error);
-      sceneInstance.current = null;
     }
 
     return () => {
-      if (sceneInstance.current && typeof sceneInstance.current.cleanup === 'function') {
+      if (sceneInstance.current?.cleanup) {
         sceneInstance.current.cleanup();
       }
-      sceneInstance.current = null;
     };
   }, []);
 
-  // Object management
+  // Object synchronization
   useEffect(() => {
     if (!sceneInstance.current) return;
 
     sceneObjects.forEach(obj => {
-      if (!objectsRef.current.has(obj.id)) {
+      let mesh = objectsRef.current.get(obj.id);
+      
+      if (!mesh) {
+        // Create new mesh with default material
         const geometry = createGeometry(obj.type);
         const material = createMaterial(obj.material);
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(...obj.position);
+        mesh = new THREE.Mesh(geometry, material);
         mesh.userData.objectId = obj.id;
         sceneInstance.current.scene.add(mesh);
         objectsRef.current.set(obj.id, mesh);
+      }
+
+      // Update transformations
+      mesh.position.set(...obj.position);
+      mesh.rotation.set(...obj.rotation);
+      mesh.scale.set(...obj.scale);
+
+      // Handle material changes
+      const currentMaterialId = mesh.material.userData?.materialId;
+      const newMaterialData = obj.material;
+      const newMaterialId = newMaterialData?.id || 'default';
+      
+      if (currentMaterialId !== newMaterialId) {
+        const newMaterial = createMaterial(newMaterialData);
+        
+        // Only update if material actually changed
+        if (mesh.material.uuid !== newMaterial.uuid) {
+          mesh.material.dispose();
+          mesh.material = newMaterial;
+        }
       }
     });
 
@@ -51,14 +71,13 @@ export default function CanvasArea({
     Array.from(objectsRef.current.keys()).forEach(id => {
       if (!sceneObjects.find(o => o.id === id)) {
         const mesh = objectsRef.current.get(id);
-        if (mesh) {
-          mesh.geometry.dispose();
-          mesh.material.dispose();
-          sceneInstance.current.scene.remove(mesh);
-        }
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+        sceneInstance.current.scene.remove(mesh);
         objectsRef.current.delete(id);
       }
     });
+
   }, [sceneObjects]);
 
   // Event handlers
@@ -146,17 +165,34 @@ function createGeometry(type) {
 }
 
 function createMaterial(materialData) {
-  if (!materialData) return new THREE.MeshStandardMaterial({ color: 0x888888 });
-  
-  const params = {
-    color: new THREE.Color(materialData.baseColor || '#666666'),
-    metalness: materialData.metallic || 0,
-    roughness: 1 - (materialData.smoothness || 0.5)
+  // Default material parameters
+  const defaults = {
+    color: 0x666666, // #666666 in hex
+    metalness: 0,
+    roughness: 0.5,
+    name: 'default',
   };
 
+  if (!materialData) {
+    const defaultMaterial = new THREE.MeshStandardMaterial(defaults);
+    defaultMaterial.userData = { materialId: 'default' };
+    return defaultMaterial;
+  }
+
+  const params = {
+    color: new THREE.Color(materialData.baseColor || defaults.color),
+    metalness: materialData.metallic ?? defaults.metalness,
+    roughness: 1 - (materialData.smoothness ?? (1 - defaults.roughness)),
+    name: materialData.name,
+  };
+
+  // Add texture maps
   const textureLoader = new THREE.TextureLoader();
   if (materialData.baseMap?.url) params.map = textureLoader.load(materialData.baseMap.url);
   if (materialData.normalMap?.url) params.normalMap = textureLoader.load(materialData.normalMap.url);
 
-  return new THREE.MeshStandardMaterial(params);
+  const material = new THREE.MeshStandardMaterial(params);
+  material.userData = { materialId: materialData.id };
+  return material;
 }
+
