@@ -1,17 +1,22 @@
+// AssetsCard.jsx
 import React from "react";
 
-export default function AssetsCard({ uploadedAssets, onSelectImage, onDeleteAsset }) {
+export default function AssetsCard({
+  uploadedAssets,
+  onSelectImage,
+  onDeleteAsset,
+}) {
   const handleDragStart = (e, asset) => {
-    e.dataTransfer.setData('material', JSON.stringify(asset));
+    e.dataTransfer.setData("material", JSON.stringify(asset));
   };
 
   return (
-    <div className="p-4 bg-zinc-800 rounded-lg h-64 overflow-y-auto"> 
+    <div className="p-4 bg-zinc-800 rounded-lg h-64 overflow-y-auto">
       {uploadedAssets?.length > 0 ? (
         <div className="grid grid-cols-2 gap-4">
           {uploadedAssets.map((asset) => (
-            <div 
-              key={asset.id} 
+            <div
+              key={asset.id}
               className="relative group cursor-pointer"
               draggable
               onDragStart={(e) => handleDragStart(e, asset)}
@@ -25,13 +30,13 @@ export default function AssetsCard({ uploadedAssets, onSelectImage, onDeleteAsse
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div 
+                  <div
                     className="w-full h-full"
-                    style={{ backgroundColor: asset.baseColor || '#666666' }}
+                    style={{ backgroundColor: asset.baseColor || "#666666" }}
                   />
                 )}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onDeleteAsset(asset.id);
@@ -44,8 +49,10 @@ export default function AssetsCard({ uploadedAssets, onSelectImage, onDeleteAsse
               </div>
               <p className="mt-1 text-xs text-gray-300 truncate">
                 {asset.name}
-                {asset.type === 'material' && (
-                  <span className="block text-xs text-gray-400">Material</span>
+                {asset.type === "material" && (
+                  <span className="block text-xs text-gray-400">
+                    Material
+                  </span>
                 )}
               </p>
             </div>
