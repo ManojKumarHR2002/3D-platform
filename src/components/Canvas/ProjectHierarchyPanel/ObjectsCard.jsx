@@ -1,73 +1,97 @@
+// ObjectsCard.jsx
 import React, { useState } from "react";
 
-export default function ObjectsCard({ sceneObjects, onCreateObject }) {
+const ICONS = {
+  cube: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1">
+      <rect x="6" y="6" width="12" height="12" />
+    </svg>
+  ),
+  sphere: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1">
+      <circle cx="12" cy="12" r="8" />
+    </svg>
+  ),
+  cylinder: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1">
+      <ellipse cx="12" cy="7" rx="6" ry="3" />
+      <rect x="6" y="7" width="12" height="10" fillOpacity="0.3" />
+      <ellipse cx="12" cy="17" rx="6" ry="3" />
+    </svg>
+  ),
+  cone: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1">
+      <polygon points="12,4 4,20 20,20" />
+    </svg>
+  ),
+  plane: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1">
+      <rect x="4" y="10" width="16" height="4" />
+    </svg>
+  ),
+  torus: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="4" fill="currentColor" />
+    </svg>
+  ),
+};
+
+export default function ObjectsCard({
+  sceneObjects,
+  onCreateObject,
+  onSelectObject
+}) {
   const [showPrimitives, setShowPrimitives] = useState(false);
-  const primitives = ['Cube', 'Sphere', 'Cylinder', 'Cone', 'Plane', 'Torus'];
+  const primitives = ["Cube","Sphere","Cylinder","Cone","Plane","Torus"];
 
   return (
-    <div className="p-4 bg-zinc-800 rounded-lg h-[100%] relative">
-      <div className="flex gap-5 justify-between">
-        <div className="flex gap-2">
-          <div>Scene 1</div>
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/6c6df1dbc5f96b387b979a0bdc6231f6da9bd81497f448e9cb103d1ac2d6bdce?apiKey=aefa27f3a4d84b2fb61917384a45b85c&"
-            className="object-contain shrink-0 my-auto w-1.5 aspect-[0.67]"
-            alt="Scene indicator"
-          />
+    <div className="p-4 bg-zinc-800 rounded-lg h-full relative">
+      <button
+        onClick={() => setShowPrimitives(!showPrimitives)}
+        className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-700 hover:bg-zinc-600 transition-colors"
+      >
+        + Add 3D Object
+      </button>
+
+      {showPrimitives && (
+        <div className="absolute z-10 w-full bg-zinc-700 rounded-lg shadow-lg p-2 top-12">
+          {primitives.map(name => (
+            <button
+              key={name}
+              onClick={() => {
+                onCreateObject(name.toLowerCase());
+                setShowPrimitives(false);
+              }}
+              className="w-full px-3 py-2 text-left hover:bg-zinc-600 rounded"
+            >
+              {name}
+            </button>
+          ))}
         </div>
-        <button
-          aria-label="Scene options"
-          className="focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg"
-        >
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/aefa27f3a4d84b2fb61917384a45b85c/364c46597119570f620ea40d2c71b0c4853b10d551264e876cde24ab4c33c023?apiKey=aefa27f3a4d84b2fb61917384a45b85c&"
-            className="object-contain shrink-0 my-auto aspect-square w-[13px]"
-            alt=""
-          />
-        </button>
-      </div>
+      )}
 
       <div className="mt-4 space-y-2">
-        <button
-          onClick={() => setShowPrimitives(!showPrimitives)}
-          className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-700 hover:bg-zinc-600 transition-colors"
-        >
-          + Add 3D Object
-        </button>
-
-        {showPrimitives && (
-          <div className="absolute z-10 w-[90%] bg-zinc-700 rounded-lg shadow-lg p-2">
-            {primitives.map((primitive) => (
-              <button
-                key={primitive}
-                onClick={() => {
-                  onCreateObject(primitive.toLowerCase());
-                  setShowPrimitives(false);
-                }}
-                className="w-full px-3 py-2 text-left hover:bg-zinc-600 rounded"
-              >
-                {primitive}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="mt-4 space-y-2">
-        {sceneObjects.map(obj => (
-          <div 
-            key={obj.id}
-            className="p-2 bg-zinc-700 rounded cursor-pointer hover:bg-zinc-600"
-          >
-            {obj.type} #{obj.id.toString().slice(-4)}
-          </div>
-        ))}
+        {sceneObjects.map(obj => {
+          const color = obj.material?.baseColor || "#888888";
+          return (
+            <div
+              key={obj.id}
+              onClick={() => onSelectObject(obj.id)}    // ← ensure this calls handleSelectObject
+              className="flex items-center gap-2 p-2 bg-zinc-700 hover:bg-zinc-600 rounded cursor-pointer"
+            >
+              <div style={{ color }}>
+                {ICONS[obj.type] || ICONS["cube"]}
+              </div>
+              <span className="text-xs text-gray-300 capitalize">{obj.type}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
+
 
 
 
