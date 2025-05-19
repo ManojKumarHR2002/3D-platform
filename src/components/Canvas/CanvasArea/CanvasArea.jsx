@@ -77,6 +77,8 @@ export default function CanvasArea({ latestModel, error, setSceneInstance }) {
     }
   };
 
+
+
   useEffect(() => {
     if (latestModel && sceneInstanceLocal) {
       loadModelIntoScene(latestModel);
@@ -89,6 +91,25 @@ export default function CanvasArea({ latestModel, error, setSceneInstance }) {
         role="main"
         aria-label="Canvas workspace"
         className="flex w-full h-full rounded-lg bg-neutral-600 relative"
+        onDragOver={e => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onDrop={async e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const file = e.dataTransfer.files && e.dataTransfer.files[0];
+          if (!file) return;
+          const ext = file.name.split('.').pop().toLowerCase();
+          if (!['glb','gltf','fbx'].includes(ext)) {
+            alert('Only GLB, GLTF, or FBX files supported.');
+            return;
+          }
+          // Generate a local URL for the dropped file
+          const localUrl = URL.createObjectURL(file);
+          const modelObj = { name: file.name, url: localUrl };
+          loadModelIntoScene(modelObj);
+        }}
       >
         <div className="flex-grow flex justify-center items-center w-full h-full rounded-xl overflow-hidden shadow-2xl">
           <canvas
