@@ -10,6 +10,7 @@ export default function CanvasWrapper() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [latestModel, setLatestModel] = useState(null);
   const [error, setError] = useState(null);
+  const [sceneInstance, setSceneInstance] = useState(null);
 
   const handleUpload = createFileUploader(
     setError,
@@ -28,8 +29,8 @@ export default function CanvasWrapper() {
         />
       </div>
       <div className="flex flex-col gap-5 w-[70%] items-center justify-center my-5 mx-5">
-        <TopBar />
-        <CanvasArea latestModel={latestModel} error={error} />
+        <TopBar sceneInstance={sceneInstance} />
+        <CanvasArea latestModel={latestModel} error={error} setSceneInstance={setSceneInstance} />
       </div>
       <div className="w-[15%] my-5 mr-5">
         <PropertiesPanel />

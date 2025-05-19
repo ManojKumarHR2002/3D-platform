@@ -17,16 +17,19 @@ export default class Scene {
     this.directionalLight = undefined;
     this.uiManager = undefined;
     this.groundPlane = undefined;
+    this._addedLights = [];
   }
 
   createGroundPlane() {
     const planeSize = 1000;
     const planeGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
     const planeMaterial = new THREE.MeshStandardMaterial({
-      color: 0x999999,
-      roughness: 0.8,
-      metalness: 0.2,
+      color: 0x222222, // Darker gray for less brightness
+      roughness: 0.9, // More diffuse
+      metalness: 0.1, // Less metallic
       side: THREE.DoubleSide,
+      emissive: 0x000000, // No self-illumination
+      emissiveIntensity: 0.0,
     });
 
     this.groundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -141,7 +144,7 @@ export default class Scene {
       this.nearPlane,
       this.farPlane
     );
-    this.camera.position.set(0, 20, 48);
+    this.camera.position.set(0, 10, 20);
 
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.physicallyCorrectLights = true;
@@ -159,10 +162,11 @@ export default class Scene {
     this.uiManager = new UIManager(this);
     this.uiManager.startRenderLoop(this.renderer);
 
-    this.ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+    // Dimmer ambient and directional lights
+    this.ambientLight = new THREE.AmbientLight(0x404040, 0.25); // Lower intensity
     this.scene.add(this.ambientLight);
 
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // Lower intensity
     this.directionalLight.position.set(10, 32, 64);
     this.directionalLight.castShadow = true;
     this.directionalLight.shadow.mapSize.width = 2048;
@@ -241,8 +245,11 @@ export default class Scene {
         light = new THREE.SpotLight(color, intensity);
         light.position.set(...position);
         light.castShadow = shadowEnabled;
-        light.angle = options.angle || Math.PI / 4;
-        light.penumbra = options.penumbra || 0.1;
+        // Make the spot light much larger and more visible
+        light.angle = options.angle || Math.PI / 2; // Wider cone (default was Math.PI / 4)
+        light.penumbra = options.penumbra || 0.4; // Softer edge
+        light.distance = options.distance || 200; // Longer reach
+        light.decay = options.decay || 1; // Standard decay
         if (shadowEnabled) {
           light.shadow.mapSize.width = 1024;
           light.shadow.mapSize.height = 1024;
@@ -264,7 +271,7 @@ export default class Scene {
       this.scene.add(helper);
     }
 
-    return {
+    const lightObj = {
       id: Date.now(),
       light,
       type,
@@ -274,6 +281,10 @@ export default class Scene {
       visible: true,
       castShadow: shadowEnabled,
     };
+
+    this._addedLights.push(lightObj);
+
+    return lightObj;
   }
 
   updateLight(lightObj, properties) {
@@ -319,5 +330,84 @@ export default class Scene {
 
     this.scene.remove(lightObj.light);
     if (lightObj.light.dispose) lightObj.light.dispose();
+  }
+
+  // Serialize the current scene configuration for saving
+  serialize() {
+    // Camera
+    const camera = this.camera
+      ? {
+          type: this.camera.type,
+          position: this.camera.position
+            ? this.camera.position.toArray()
+            : null,
+          rotation: this.camera.rotation
+            ? [
+                this.camera.rotation.x,
+                this.camera.rotation.y,
+                this.camera.rotation.z,
+              ]
+            : null,
+          fov: this.camera.fov,
+          near: this.camera.near,
+          far: this.camera.far,
+          aspect: this.camera.aspect,
+        }
+      : null;
+
+    // Lights (ambient, directional, and any added lights)
+    const lights = [];
+    if (this.ambientLight) {
+      lights.push({
+        type: "ambient",
+        color: this.ambientLight.color.getHex(),
+        intensity: this.ambientLight.intensity,
+      });
+    }
+    if (this.directionalLight) {
+      lights.push({
+        type: "directional",
+        color: this.directionalLight.color.getHex(),
+        intensity: this.directionalLight.intensity,
+        position: this.directionalLight.position.toArray(),
+        castShadow: this.directionalLight.castShadow,
+      });
+    }
+    if (this._addedLights && Array.isArray(this._addedLights)) {
+      for (const l of this._addedLights) {
+        lights.push({
+          type: l.type,
+          color: l.color,
+          intensity: l.intensity,
+          position: l.position,
+          visible: l.visible,
+          castShadow: l.castShadow,
+        });
+      }
+    }
+
+    // Objects (basic serialization: meshes with position, rotation, scale, name, type)
+    const objects = [];
+    if (this.scene && this.scene.children) {
+      for (const obj of this.scene.children) {
+        if (obj.type === "Mesh" && obj.name !== "groundPlane") {
+          objects.push({
+            name: obj.name,
+            type: obj.type,
+            position: obj.position.toArray(),
+            rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
+            scale: obj.scale.toArray(),
+            geometryType: obj.geometry ? obj.geometry.type : null,
+            materialType: obj.material ? obj.material.type : null,
+          });
+        }
+      }
+    }
+
+    return {
+      camera,
+      lights,
+      objects,
+    };
   }
 }

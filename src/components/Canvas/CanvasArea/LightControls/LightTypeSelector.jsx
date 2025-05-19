@@ -19,9 +19,11 @@ export default function LightTypeSelector({
       </select>
       <button
         onClick={onAddLight}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+        className="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-10 h-10 flex items-center justify-center p-0 transition-colors"
+        aria-label="Add Light"
+        style={{ fontSize: 24, lineHeight: 1 }}
       >
-        Add
+        <span style={{ display: 'block', width: '100%', textAlign: 'center', fontWeight: 'bold' }}>+</span>
       </button>
     </div>
   );

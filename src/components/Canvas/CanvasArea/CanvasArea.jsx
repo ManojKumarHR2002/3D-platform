@@ -7,7 +7,7 @@ import {
   setupAnimations,
   setupAnimationLoop,
 } from "@utils/ModelRenderUtils";
-import LightingControls from "./LightControls/LightingControls";
+import AnimationPanel from "../AnimationPanel/AnimationPanel";
 
 export const UIManagerContext = createContext();
 
@@ -15,9 +15,11 @@ export function useUIManager() {
   return useContext(UIManagerContext);
 }
 
-export default function CanvasArea({ latestModel, error }) {
-  const [sceneInstance, setSceneInstance] = useState(null);
+export default function CanvasArea({ latestModel, error, setSceneInstance }) {
+  const [sceneInstanceLocal, setSceneInstanceLocal] = useState(null);
   const [mixers, setMixers] = useState([]);
+  // Animation extraction state
+  const [animationData, setAnimationData] = useState(null);
 
   useEffect(() => {
     const scene = new Scene("myThreeJsCanvas");
@@ -28,37 +30,61 @@ export default function CanvasArea({ latestModel, error }) {
     const clock = new THREE.Clock();
     setupAnimationLoop(scene, newMixers, clock);
 
-    setSceneInstance(scene);
+    setSceneInstanceLocal(scene);
     setMixers(newMixers);
+    if (setSceneInstance) setSceneInstance(scene);
 
     return () => {
       scene.cleanup();
+      if (setSceneInstance) setSceneInstance(null);
     };
   }, []);
+
+  // Helper: Extract and prepare animation data for AnimationPanel
+  const extractAnimationPanelData = (model, meshOrScene) => {
+    if (!model.animations || model.animations.length === 0) return null;
+    const mixer = new THREE.AnimationMixer(meshOrScene);
+    const actions = model.animations.map((clip) => mixer.clipAction(clip));
+    return {
+      animations: model.animations,
+      mixer,
+      actions,
+    };
+  };
 
   const loadModelIntoScene = (model) => {
     const position = [0, 0, 0];
     const scale = [0.5, 0.5, 0.5];
 
     if (model.url.endsWith(".fbx")) {
-      loadFBXModel(sceneInstance.scene, model.url, position, scale).then(
-        (fbx) => setupAnimations(fbx, mixers)
+      loadFBXModel(sceneInstanceLocal.scene, model.url, position, scale).then(
+        (fbx) => {
+          setupAnimations(fbx, mixers);
+          // Extract animations for UI panel
+          const animData = extractAnimationPanelData(fbx, fbx);
+          setAnimationData(animData);
+        }
       );
     } else {
-      loadGLTFModel(sceneInstance.scene, model.url, position, 0, scale).then(
-        (gltf) => setupAnimations(gltf, mixers)
+      loadGLTFModel(sceneInstanceLocal.scene, model.url, position, 0, scale).then(
+        (gltf) => {
+          setupAnimations(gltf, mixers);
+          // Extract animations for UI panel
+          const animData = extractAnimationPanelData(gltf, gltf.scene);
+          setAnimationData(animData);
+        }
       );
     }
   };
 
   useEffect(() => {
-    if (latestModel && sceneInstance) {
+    if (latestModel && sceneInstanceLocal) {
       loadModelIntoScene(latestModel);
     }
-  }, [latestModel]);
+  }, [latestModel, sceneInstanceLocal]);
 
   return (
-    <UIManagerContext.Provider value={sceneInstance?.uiManager}>
+    <UIManagerContext.Provider value={sceneInstanceLocal?.uiManager}>
       <div
         role="main"
         aria-label="Canvas workspace"
@@ -70,13 +96,17 @@ export default function CanvasArea({ latestModel, error }) {
             className="w-full h-full bg-gray-950 border border-gray-700"
           />
         </div>
-
-        {sceneInstance && (
-          <div className="absolute top-4 right-4 w-80 z-10">
-            <LightingControls sceneInstance={sceneInstance} />
-          </div>
+        {/* --- Animation Panel (floating, right) --- */}
+        {animationData && animationData.animations.length > 0 && (
+          <AnimationPanel
+            animations={animationData.animations}
+            mixer={animationData.mixer}
+            actions={animationData.actions}
+          />
         )}
+        {/* Lighting controls moved to TopBar */}
       </div>
     </UIManagerContext.Provider>
   );
 }
+

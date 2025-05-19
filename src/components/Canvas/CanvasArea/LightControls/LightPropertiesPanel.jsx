@@ -49,7 +49,7 @@ export default function LightPropertiesPanel({ light, onUpdate, onRemove }) {
           <input
             type="range"
             min="0"
-            max="5"
+            max="10"
             step="0.1"
             value={light.intensity}
             onChange={(e) =>
