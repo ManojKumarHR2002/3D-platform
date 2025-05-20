@@ -68,7 +68,7 @@ export default function ProjectHierarchyPanel({ handleUpload, uploading, uploadP
         />
       </div>
       <div className="flex-grow my-3.5">
-        {selectedTab === 'objects' && <ObjectsCard />}
+        {selectedTab === 'objects' && <ObjectsCard sceneInstance={window.sceneInstance} />}
         {selectedTab === 'assets' && <AssetsCard />}
       </div>
       <div >

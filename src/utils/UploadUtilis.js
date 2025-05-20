@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { supabase } from '@src/supabase/Supabase';
 
 /**
  * @param {Function} setError - State setter to update any error messages.
@@ -35,33 +34,11 @@ export const createFileUploader = (
       try {
         setError(null); // Reset any previous errors
         setUploading(true); // Start uploading
-        const fileName = `${uuidv4()}.${fileExtension}`; // Generate a unique filename using UUID
-
-        // Get the bucket name from environment variables
-        const bucketName = import.meta.env.VITE_SUPABASE_BUCKET_NAME;
-
-        // Upload the file to Supabase storage
-        const { data, error } = await supabase.storage
-          .from(bucketName)
-          .upload(fileName, file, {
-            cacheControl: '3600',
-            onUploadProgress: (progress) => {
-              const percentage = (progress.loaded / progress.total) * 100;
-              setUploadProgress(Math.round(percentage));
-            },
-          });
-
-        if (error) throw error;
-
-        // Generate a signed URL for the uploaded file
-        const { data: signedUrlData, error: signedUrlError } = await supabase.storage
-          .from(bucketName)
-          .createSignedUrl(fileName, 3600); // URL valid for 3600 seconds (1 hour)
-
-        if (signedUrlError) throw signedUrlError;
-
-        // Update the latest model with the signed URL
-        setLatestModel({ name: file.name, url: signedUrlData.signedUrl });
+        // Simulate upload progress for local file (instant)
+        setUploadProgress(100);
+        // Generate a local URL for the file
+        const localUrl = URL.createObjectURL(file);
+        setLatestModel({ name: file.name, url: localUrl });
       } catch (error) {
         setError(error.message); // Handle errors
       } finally {
