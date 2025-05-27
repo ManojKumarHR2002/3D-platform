@@ -60,7 +60,7 @@ An interactive 3D platform built using **React Fiber** and **Three.js**. This pl
    ```bash
     npm run dev
 
-The application will be available at http://localhost:3000.
+The application will be available at localhost.
 
 ## Usage
 
