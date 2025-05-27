@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import CanvasArea from "./CanvasArea/CanvasArea";
 import ProjectHierarchyPanel from "./ProjectHierarchyPanel/ProjectHierarchyPanel";
-import { createFileUploader } from "@utils/uploadUtilis";
+import { createFileUploader } from "@utils/UploadUtilis";
 
 
 import TopBar from './TopBar/TopBar';
