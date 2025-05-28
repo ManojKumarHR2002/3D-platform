@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as THREE from "three";
 import Scene from "@classes/Scene";
 import { loadGLTFModel, loadFBXModel, setupAnimations,setupAnimationLoop } from "@utils/ModelRenderUtils"; // Corrected path
-import { createFileUploader } from "@utils/uploadUtilis";
+import { createFileUploader } from "@utils/UploadUtilis";
 
 export default function CanvasArea({ latestModel,error }) {
 
