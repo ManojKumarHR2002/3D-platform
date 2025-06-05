@@ -12,7 +12,7 @@
   "dependencies": {
     "@react-three/drei": "^9.120.4",
     "@react-three/fiber": "^8.17.10",
-    "@reduxjs/toolkit": "^2.5.1",
+    "@reduxjs/toolkit": "^2.8.2",
     "@supabase/supabase-js": "^2.47.16",
     "3d-platform": "file:",
     "firebase": "^11.1.0",
@@ -35,7 +35,7 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
-    "vite": "^5.4.1",
+    "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.3"
   }
 }

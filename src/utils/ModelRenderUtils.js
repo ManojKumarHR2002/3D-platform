@@ -24,16 +24,27 @@ export const setupAnimations = (model, mixers) => {
  * @param {Array} scale - Scale for the model.
  * @returns {Promise} - Resolves with the loaded model.
  */
-export const loadGLTFModel = (scene, path, position, rotation, scale) => {
+export const loadGLTFModel = (scene, path, position, rotation, scale, modelId = null) => {
   const loader = new GLTFLoader();
   return new Promise((resolve, reject) => {
     loader.load(
       path,
       (gltfScene) => {
-        gltfScene.scene.rotation.y = rotation;
-        gltfScene.scene.position.set(...position);
-        gltfScene.scene.scale.set(...scale);
-        scene.add(gltfScene.scene);
+        const obj = gltfScene.scene;
+        obj.rotation.y = rotation;
+        obj.position.set(...position);
+        obj.scale.set(...scale);
+
+        if (modelId) {
+          obj.userData.modelId = modelId;
+          obj.traverse(child => {
+            if (child.isMesh) {
+              child.userData.modelId = modelId; // ensure all children carry the ID
+            }
+          });
+        }
+
+        scene.add(obj);
         resolve(gltfScene);
       },
       (xhr) => console.log((xhr.loaded / xhr.total) * 100 + '% loaded'),
@@ -45,6 +56,7 @@ export const loadGLTFModel = (scene, path, position, rotation, scale) => {
   });
 };
 
+
 /**
  * Loads an FBX model into the scene.
  * @param {THREE.Scene} scene - The scene to add the model to.
@@ -53,15 +65,25 @@ export const loadGLTFModel = (scene, path, position, rotation, scale) => {
  * @param {Array} scale - Scale for the model.
  * @returns {Promise} - Resolves with the loaded model.
  */
-export const loadFBXModel = (scene, path, position, scale) => {
+export const loadFBXModel = (scene, path, position, scale, modelId = null) => {
   const loader = new FBXLoader();
   return new Promise((resolve, reject) => {
     loader.load(
       path,
       (object) => {
         object.traverse((child) => {
-          if (child.isMesh) child.material.transparent = false;
+          if (child.isMesh) {
+            child.material.transparent = false;
+            if (modelId) {
+              child.userData.modelId = modelId;
+            }
+          }
         });
+
+        if (modelId) {
+          object.userData.modelId = modelId;
+        }
+
         object.position.set(...position);
         object.scale.set(...scale);
         scene.add(object);
@@ -75,6 +97,7 @@ export const loadFBXModel = (scene, path, position, scale) => {
     );
   });
 };
+
 
 /**
  * Runs the animation loop and updates mixers.
