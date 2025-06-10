@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as THREE from "three";
 import Scene from "@classes/Scene";
 import { loadGLTFModel, loadFBXModel, setupAnimations,setupAnimationLoop } from "@utils/ModelRenderUtils"; // Corrected path
-import { createFileUploader } from "@utils/UploadUtilis";
+import { createFileUploader } from "@utils/UploadUtils";
 
 export default function CanvasArea({ latestModel,error }) {
 
@@ -17,7 +17,10 @@ export default function CanvasArea({ latestModel,error }) {
 
     const newMixers = [];
     const clock = new THREE.Clock();
-    setupAnimationLoop(test, newMixers, clock);
+    // setupAnimationLoop(test, newMixers, clock);
+
+    const frameRef={id:null};
+    setupAnimationLoop(test,newMixers,clock,frameRef);
 
     setSceneInstance(test);
     setMixers(newMixers);
@@ -25,7 +28,11 @@ export default function CanvasArea({ latestModel,error }) {
     const canvas = document.getElementById("myThreeJsCanvas");
     canvas.addEventListener("click", onClick, false);
 
-    return () => canvas.removeEventListener("click", onClick);
+    return () => {
+      canvas.removeEventListener("click", onClick);
+      cancelAnimationFrame(frameRef.id);
+      if (test)test.dispose();
+    }
   }, []);
 
   // Click Handler for Selection

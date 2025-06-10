@@ -17,6 +17,7 @@ export default class Scene {
 
     this.ambientLight = undefined;
     this.directionalLight = undefined;
+    this.resizeListener=null;
   }
 
   initialize() {
@@ -102,7 +103,9 @@ export default class Scene {
     this.scene.add(zAxisLine);
 
 
-    window.addEventListener('resize', () => this.onWindowResize(), false);
+    // window.addEventListener('resize', () => this.onWindowResize(), false);
+    this.resizeListener=this.onWindowResize.bind(this);
+    window.addEventListener('resize',this.resizeListener,false);
   }
 
   animate() {
@@ -122,11 +125,24 @@ export default class Scene {
     if (!parent) return;
 
     const width = parent.clientWidth;
-    const height = parent.clientWidth;
+    const height = parent.clientHeight;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
+  }
+
+  dispose()
+  {
+    if(this.resizeListener)
+    {
+      window.removeEventListener('resize',this.resizeListener,false);
+      this.resizeListener=null;
+    }
+    if(this.controls && typeof this.controls.dispose==='function')
+    {
+      this.controls.dispose();
+    }
   }
 }
