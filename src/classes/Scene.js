@@ -18,6 +18,9 @@ export default class Scene {
     this.ambientLight = undefined;
     this.directionalLight = undefined;
     this.resizeListener=null;
+
+    this.animationId=null;
+    this.animate=this.animate.bind(this);
   }
 
   initialize() {
@@ -109,9 +112,23 @@ export default class Scene {
   }
 
   animate() {
-    window.requestAnimationFrame(this.animate.bind(this));
+    this.animationId= window.requestAnimationFrame(this.animate.bind(this));
     this.render();
     this.controls.update();
+  }
+
+  start()
+  {
+    this.animate();
+  }
+
+  stop()
+  {
+    if(this.animationId!=null)
+    {
+      cancelAnimationFrame(this.animationId);
+      this.animationId=null;
+    }
   }
 
   render() {
@@ -135,6 +152,7 @@ export default class Scene {
 
   dispose()
   {
+    this.stop();
     if(this.resizeListener)
     {
       window.removeEventListener('resize',this.resizeListener,false);

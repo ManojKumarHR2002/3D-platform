@@ -13,14 +13,17 @@ export default function CanvasArea({ latestModel,error }) {
   useEffect(() => {
     const test = new Scene("myThreeJsCanvas");
     test.initialize();
-    test.animate();
+    // test.animate();
+    test.start();
 
     const newMixers = [];
     const clock = new THREE.Clock();
     // setupAnimationLoop(test, newMixers, clock);
 
-    const frameRef={id:null};
-    setupAnimationLoop(test,newMixers,clock,frameRef);
+    // const frameRef={id:null};
+    // setupAnimationLoop(test,newMixers,clock,frameRef);
+    setupAnimationLoop(test,newMixers,clock);
+
 
     setSceneInstance(test);
     setMixers(newMixers);
@@ -30,7 +33,7 @@ export default function CanvasArea({ latestModel,error }) {
 
     return () => {
       canvas.removeEventListener("click", onClick);
-      cancelAnimationFrame(frameRef.id);
+      // cancelAnimationFrame(frameRef.id);
       if (test)test.dispose();
     }
   }, []);

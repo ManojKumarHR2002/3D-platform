@@ -105,8 +105,10 @@ export const loadFBXModel = (scene, path, position, scale, modelId = null) => {
  * @param {Array} mixers - Array of animation mixers.
  * @param {THREE.Clock} clock - Clock for delta time.
  */
-export const setupAnimationLoop = (test, mixers, clock,frameRef) => {
-  requestAnimationFrame(() => setupAnimationLoop(test, mixers, clock,frameRef));
+// export const setupAnimationLoop = (test, mixers, clock,frameRef) => {
+  // requestAnimationFrame(() => setupAnimationLoop(test, mixers, clock,frameRef));
+  export const setupAnimationLoop = (test, mixers, clock) => {
+  requestAnimationFrame(() => setupAnimationLoop(test, mixers, clock));
   const delta = clock.getDelta();
   mixers.forEach((mixer) => mixer.update(delta));
   test.render();
