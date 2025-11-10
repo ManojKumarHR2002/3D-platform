@@ -1,5 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
+import { WebIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import { draco, compressTexture } from '@gltf-transform/functions';
+import draco3d from 'draco3dgltf';
 import { supabase } from '@src/supabase/Supabase';
+import { addObject } from '@src/store/slices/sceneSlice'; // Assuming sceneSlice exists
+
 
 /**
  * @param {Function} setError - State setter to update any error messages.
@@ -12,7 +18,8 @@ export const createFileUploader = (
   setError,
   setUploading,
   setUploadProgress,
-  setLatestModel
+  setLatestModel,
+  dispatch
 ) => {
   return async () => {
     const input = document.createElement('input');
@@ -35,6 +42,26 @@ export const createFileUploader = (
       try {
         setError(null); // Reset any previous errors
         setUploading(true); // Start uploading
+
+        const arrayBuffer = await file.arrayBuffer();
+
+        // === Compress in-browser ===
+        // const io = new WebIO()
+        //   .registerExtensions(ALL_EXTENSIONS)
+        //   .registerDependencies({
+        //     'draco3d.encoder': await draco3d.createEncoderModule(),
+        //     'draco3d.decoder': await draco3d.createDecoderModule()
+        //   });
+
+        // const doc = await io.readBinary(arrayBuffer);
+        // await doc.transform(
+        //   draco(),
+        //   compressTexture({ targetFormat: 'webp', resize: [1024, 1024] })
+        // );
+
+        // const compressed = await io.writeBinary(doc);
+        // const compressedBlob = new Blob([compressed], { type: 'model/gltf-binary' });
+
         const fileName = `${uuidv4()}.${fileExtension}`; // Generate a unique filename using UUID
 
         // Get the bucket name from environment variables
@@ -62,6 +89,21 @@ export const createFileUploader = (
 
         // Update the latest model with the signed URL
         setLatestModel({ name: file.name, url: signedUrlData.signedUrl });
+
+        // ✅ Dispatch to Redux to add to hierarchy
+        dispatch(addObject({
+          id: uuidv4(),
+          name: file.name,
+          url: modelUrl,
+          parentId: null,
+          type: 'model',
+          properties: {
+            position: { x: 0, y: 0, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            scale: { x: 1, y: 1, z: 1 }
+          }
+        }));
+
       } catch (error) {
         setError(error.message); // Handle errors
       } finally {

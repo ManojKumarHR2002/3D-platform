@@ -1,8 +1,9 @@
 // src/models/Model.js
 
 class Model {
-    constructor(id, modelPath, position, rotation, scale, properties) {
+    constructor(id,name, modelPath, position, rotation, scale, properties) {
       this.id = id;
+      this.name = name || "Unnamed";
       this.modelPath = modelPath;
       this.position = position || { x: 0, y: 0, z: 0 };
       this.rotation = rotation || { x: 0, y: 0, z: 0 };
@@ -21,10 +22,15 @@ class Model {
     setScale(newScale) {
       this.scale = newScale;
     }
+
+    setName(newName) {
+      this.name = newName;
+    }
   
     toJSON() {
       return JSON.stringify({
         id: this.id,
+        name: this.name,
         modelPath: this.modelPath,
         position: this.position,
         rotation: this.rotation,
@@ -34,16 +40,18 @@ class Model {
     }
   
     static fromJSON(json) {
-      const data = JSON.parse(json);
-      return new Model(
-        data.id,
-        data.modelPath,
-        data.position,
-        data.rotation,
-        data.scale,
-        data.properties
-      );
-    }
+    const data = typeof json === 'string' ? JSON.parse(json) : json;
+    return new Model(
+      data.id,
+      data.name,
+      data.modelPath,
+      data.position,
+      data.rotation,
+      data.scale,
+      data.properties
+    );
+}
+
   }
   
   export default Model;

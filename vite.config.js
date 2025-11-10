@@ -15,6 +15,7 @@ export default defineConfig({
       '@services': path.resolve(__dirname, 'src/services'),
       // '@supabase': path.resolve(__dirname, 'src/supabase'),
       '@utils': path.resolve(__dirname, 'src/utils'),
+      '@store': path.resolve(__dirname,'src/store')
     },
   },
 })
